@@ -1,0 +1,13 @@
+#Ignore everthing:
+/*
+
+#But in parent_directory do not ignore:
+!.gitignore
+!dynamos.py
+!README
+!trial_run.py
+
+#Do not ignore:
+!integrators
+integrators/*
+
