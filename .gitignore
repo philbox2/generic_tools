@@ -3,11 +3,11 @@
 
 #But in parent_directory do not ignore:
 !.gitignore
-!dynamos.py
-!README
-!trial_run.py
+!README.md
+!LICENSE
+!pip_requirements.txt
 
 #Do not ignore:
-!integrators
-integrators/*
+!ode_solvers
+ode_solvers/*
 

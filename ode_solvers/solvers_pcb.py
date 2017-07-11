@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+"""explicit Euler and Runge-Kutta-4th order to solve ODEs numerically."""
+
 import numpy as np
 
 def integrate_euler_method(f, y, t_axis, dt):

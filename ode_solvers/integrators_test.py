@@ -1,5 +1,11 @@
 #!/usr/bin/python3
 
+"""
+This script test the ode_solvers defined in the same directory with two
+simple examples.
+
+Just call this using python3 ingerators_test.py in shell.
+"""
 import numpy as np
 import solvers_pcb
 
