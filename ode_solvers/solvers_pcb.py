@@ -4,7 +4,7 @@
 
 import numpy as np
 
-def integrate_euler_method(f, y, t_axis, dt):
+def integrate_euler_method(f, y, t_axis):
     """Take the ordinary differential equation and integrate it using the explicit euler method
     
     Parameters:
@@ -19,7 +19,7 @@ def integrate_euler_method(f, y, t_axis, dt):
     def next_euler_method(t_n, y_n, h):
         y_next = y_n + h * f(t_n, y_n)
 
-        return y_n
+        return y_next
 
     def check_prerequisites_set_stepwidth():
         #check equally spaced:
@@ -42,13 +42,13 @@ def integrate_euler_method(f, y, t_axis, dt):
     return np.asarray(res_euler)
 
 
-def integrate_runge_kutta_4thorder(f, t_axis, y,  h=None):
+def integrate_runge_kutta_4thorder(f, t_axis, y):
     """Find the stepwise solution of the ode f using the 4th order Runge Kutta method. Sadly the formulas are taken from internet resources aka wikipedia...so be carefull
 
     Parameters:
     -----------
     f: ordinary differential equation takes arguments f(t, y) = d/dt. Return value has to be an np.ndarray. Fix this ??
-    y: system state at this time
+    y: system state at this time as np.ndarray
     ts: time_axis. That has to be checked to be equally spaced
 
     """
@@ -72,15 +72,18 @@ def integrate_runge_kutta_4thorder(f, t_axis, y,  h=None):
         
         #Return stepwidth:
         return np.diff(t_axis).mean()
-
+    def print_progress(x):
+            print("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(x * 50), x * 100), end="", flush=True)
+            
     h = check_prerequisites_set_stepwidth()
 
 
     res_rk4 = []
     y_current = y.copy()
 
+    tN = len(t_axis)
     for idx, tt in enumerate(t_axis):
-        
+        print_progress(idx/tN)
         res_rk4.append(y_current)
         y_current = next_runge_kutta_4th( tt, y_current, h)
         

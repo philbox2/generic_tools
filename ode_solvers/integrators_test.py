@@ -91,7 +91,7 @@ class test_solver:
         x_0 = y_fall[1]
         
         res_rk4 = solvers_pcb.integrate_runge_kutta_4thorder(self.ode_fall_with_resistance, self.t_axis, y_fall)        
-        res_euler = solvers_pcb.integrate_
+        #res_euler = solvers_pcb.integrate_euler_method(self.ode_fall_with_resistance, self.t_axis, y_fall)
         
         acc_solution = np.empty((len(self.t_axis), 2))
 
@@ -104,10 +104,13 @@ class test_solver:
 
         ax[0].plot(self.t_axis, acc_solution[:,0], label="$v(t)$ analytical")
         ax[0].plot(self.t_axis, res_rk4[:,0], label="Runge-Kutta 4th order $v(t)$", marker = "x", linestyle="")
+        #ax[0].plot(self.t_axis, res_euler[:,0], label="Runge-Kutta 4th order $v(t)$", marker = "x", linestyle="")
+        
         ax[0].set_ylabel("v(t)")
 
         ax[1].plot(self.t_axis, acc_solution[:,1], label="$x(t)$ analytical")
         ax[1].plot(self.t_axis, res_rk4[:,1], label="Runge-Kutta 4th order $x(t)$", marker = "x", linestyle="")
+        #ax[1].plot(self.t_axis, res_euler[:,1], label="Runge-Kutta 4th order $x(t)$", marker = "x", linestyle="")
 
         ax[1].set_ylabel("$x(t)$")
         ax[1].set_xlabel("$t$") 
@@ -124,6 +127,10 @@ class test_solver:
 if __name__=="__main__":
 
     test_cls = test_solver()
+
+    print("Example for exponential growth Runge-Kutta 4th")
+
+    test_cls.integrate_ode_decay()
 
     print("Example for the Runge-Kutta 4th for fall with air resistance")
     
