@@ -37,9 +37,18 @@ class test_solver:
         #Sovle the decay ode for y_0 = 1:
         y_decay = np.array([1])
 
+        reuler = solvers_pcb.integrate_euler_method(self.ode_decay)
+        reuler.set_initial_values(y_decay, self.t_axis[0])
+        results = []
+        results.append(y_decay)
+        for idx, tt in enumerate(self.t_axis[:-1]):
+            results.append(reuler.integrate(tt, self.h)) 
+        
+        res_euler = np.asarray(results)
+
+
         r = solvers_pcb.integrate_runge_kutta_4thorder(self.ode_decay)
         r.set_initial_values(y_decay, self.t_axis[0])
-
         results = []
         results.append(y_decay)
         for idx, tt in enumerate(self.t_axis[:-1]):
@@ -55,24 +64,24 @@ class test_solver:
         
         fig, ax_arr = plt.subplots(2,1, sharex=True)
         fig = plt.gcf()
-        fig.canvas.set_window_title('Exponential Growth')
-        fig.suptitle("$dx/dt = x $")
+        fig.canvas.set_window_title('Exponential Growth dx/dt = x')
         ax = ax_arr.flatten()
 
         
         ax[0].plot(self.t_axis, res_rk4, label="Runge-Kutta 4th order", marker = 'x', linestyle='', color='g')
+        ax[0].plot(self.t_axis, res_euler, label="Euler-Method", marker = '+', linestyle='', color='b')
         ax[0].plot(self.t_axis, res_rk4_axis, label="RK4th along t_axis", marker = '+', linestyle="", color='r')
         ax[0].plot(self.t_axis, acc_solution, label="Analytical Solution",color='k')
         ax[0].set_ylabel("$x$")
         
-        ax[1].plot(self.t_axis, res_rk4[:,0] - acc_solution, label="Difference", marker = 'x', color='g')
-        ax[1].plot(self.t_axis, res_rk4_axis[:,0] - acc_solution, label="Difference along axis", marker = '+', color='r')
+        ax[1].plot(self.t_axis, abs(res_rk4[:,0] - acc_solution), label="Difference RK4", marker = 'x', color='g')
+        ax[1].plot(self.t_axis, abs(res_euler[:,0] - acc_solution), label="Difference Euler", marker = '+', color='b')
         ax[1].set_xlabel("$t$")
-        ax[1].set_ylabel("$\Delta x = x_{rk4}-x(t)$")
-        
+        ax[1].set_ylabel(r"$\Delta x = \left| x_{est}-x(t) \right|$")
+        ax[1].set_yscale('log')
         
 
-        ax[0].legend(numpoints=1)
+        ax[0].legend(numpoints=1, loc=2)
         plt.tight_layout()
         return fig
 
@@ -132,7 +141,6 @@ class test_solver:
 
         ax[1].plot(self.t_axis, acc_solution[:,1], label="$x(t)$ analytical")
         ax[1].plot(self.t_axis, res_rk4[:,1], label="Runge-Kutta 4th order $x(t)$", marker = "x", linestyle="")
-        #ax[1].plot(self.t_axis, res_euler[:,1], label="Runge-Kutta 4th order $x(t)$", marker = "x", linestyle="")
 
         ax[1].set_ylabel("$x(t)$")
         ax[1].set_xlabel("$t$") 
@@ -147,7 +155,7 @@ if __name__=="__main__":
 
     test_cls = test_solver()
 
-    print("Example for exponential growth Runge-Kutta 4th")
+    print("Example for exponential growth Runge-Kutta 4th and euler")
 
     fig1 = test_cls.integrate_ode_decay()
 

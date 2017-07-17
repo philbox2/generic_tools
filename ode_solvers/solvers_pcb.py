@@ -4,7 +4,7 @@
 
 import numpy as np
 
-def integrate_euler_method(f, y, t_axis):
+class integrate_euler_method:
     """Take the ordinary differential equation and integrate it using the explicit euler method
     
     Parameters:
@@ -16,30 +16,56 @@ def integrate_euler_method(f, y, t_axis):
   
     """
 
-    def next_euler_method(t_n, y_n, h):
-        y_next = y_n + h * f(t_n, y_n)
+    def __init__(self, ff):
+        self.ff = ff
+
+    def set_initial_values(self, y0, t0):
+        self.y = y0
+        self.tt = t0
+
+    def next_euler_method(self, t_n, y_n, h):
+        y_next = y_n + h * self.ff(t_n, y_n)
 
         return y_next
 
-    def check_prerequisites_set_stepwidth():
-        #check equally spaced:
-        if np.diff(t_axis).std() >= 10**-6:
-            raise ValueError("t_axis is not equally spaced")
-        #Return stepwidth:
 
-        return np.diff(t_axis).mean()
 
-    h = check_prerequisites_set_stepwidth()
-
-    res_euler = []
-    y_current = y.copy()
-
-    for idx, tt in enumerate(t_axis):
+    def integrate(self, tt, h):
+        if self.y is None or self.tt is None:
+            raise ValueError("Initialise class first with initial values.")
         
-        res_euler.append(y_current)
-        y_current = next_euler_method( tt, y_current, h)
+        y_current = self.next_euler_method( tt, self.y, h)
+        self.y = y_current
         
-    return np.asarray(res_euler)
+        return y_current
+
+    def integrate_along_taxis(self, t_axis, y0, show_progress=False):
+
+        def print_progress(x):
+            print("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(x * 50), x * 100), end="", flush=True)
+            
+        def check_prerequisites_set_stepwidth():
+            #check equally spaced:
+            if np.diff(t_axis).std() >= 10**-6:
+                raise ValueError("t_axis is not equally spaced")
+                #Return stepwidth:
+
+            return np.diff(t_axis).mean()
+
+        hh = check_prerequisites_set_stepwidth()
+        
+        res_euler = []
+
+        y_current = y0.copy()
+        
+        tN = len(t_axis)-1
+        for idx, tt in enumerate(t_axis):
+            if show_progress:
+                print_progress(idx/tN)
+            res_euler.append(y_current)
+            y_current = self.next_runge_kutta_4th( tt, y_current, hh)
+
+        return np.asarray(res_euler)
 
 
 class integrate_runge_kutta_4thorder:
