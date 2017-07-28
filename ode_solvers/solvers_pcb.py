@@ -136,5 +136,6 @@ class integrate_runge_kutta_4thorder:
                 print_progress(idx/tN)
             res_rk4.append(y_current)
             y_current = self.next_runge_kutta_4th( tt, y_current, hh)
-
+        if show_progress:
+            print()
         return np.asarray(res_rk4)
